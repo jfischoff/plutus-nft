@@ -1,0 +1,73 @@
+cabal-version: 2.4
+
+name:                   plutus-nft
+version:                1.0.0
+description:            Lobster naming.
+author:                 Lars Brünjes, Jonathan Fischoff
+maintainer:             jonathangfischoff@gmail.com
+license:                Apache-2.0
+license-file:           LICENSE
+build-type:             Simple
+extra-source-files:     README.md
+
+
+common base
+  build-depends: base >= 4.14 && < 4.15
+
+common project-config
+  default-language:     Haskell2010
+
+  default-extensions:   OverloadedStrings
+                        DataKinds
+                        DeriveAnyClass
+                        DeriveGeneric
+                        FlexibleInstances
+                        FlexibleContexts
+                        MultiParamTypeClasses
+                        NamedFieldPuns
+                        ScopedTypeVariables
+                        TemplateHaskell
+                        TypeApplications
+                        TypeFamilies
+                        TypeOperators
+
+  ghc-options:          -Wall
+                        -Wcompat
+                        -Wincomplete-record-updates
+                        -Wincomplete-uni-patterns
+                        -Wpartial-fields
+                        -Wredundant-constraints
+                        -Wunused-packages
+
+common maybe-Win32
+  if os(windows)
+     build-depends:    Win32
+
+library
+  import:               base, project-config
+                      , maybe-Win32
+
+
+  hs-source-dirs:       src
+
+  exposed-modules:      Cardano.Plutus.Nft
+
+  build-depends:        bytestring
+                      , cardano-api
+                      , plutus-core
+                      , plutus-ledger
+                      , plutus-ledger-api
+                      , plutus-tx
+                      , plutus-tx-plugin
+                      , serialise
+
+  ghc-options: -fobject-code -fno-ignore-interface-pragmas -fno-omit-interface-pragmas
+
+executable create-nft-script
+  import:               base, project-config
+  hs-source-dirs:       app
+  main-is:              Main.hs
+  ghc-options:          -threaded -rtsopts "-with-rtsopts=-T"
+  build-depends:        cardano-api
+                      , plutus-ledger
+                      , plutus-nft
